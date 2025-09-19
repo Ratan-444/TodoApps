@@ -1,3 +1,4 @@
+// index.js
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -16,15 +17,30 @@ app.use(express.json());
 // Routes
 app.use("/api/todos", todoRoutes);
 
+// Root route
 app.get("/", (req, res) => {
   res.send("Todo App Backend Running 🚀");
 });
 
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error(err));
+// ✅ MongoDB connection caching (for Vercel serverless)
+let isConnected;
 
-// 👉 Export the app instead of listening
+async function connectDB() {
+  if (isConnected) {
+    console.log("✅ Using existing MongoDB connection");
+    return;
+  }
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    isConnected = true;
+    console.log("✅ MongoDB connected");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+  }
+}
+
+// Connect immediately
+connectDB();
+
+// Export app for Vercel serverless
 export default app;
