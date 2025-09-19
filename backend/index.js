@@ -22,13 +22,18 @@ app.get("/", (req, res) => {
   res.send("Todo App Backend Running 🚀");
 });
 
-let isConnected;
+// ✅ Serverless-friendly MongoDB connection caching
+let isConnected = false;
 
 export const connectDB = async () => {
-  if (isConnected) return;
+  if (isConnected) {
+    console.log("✅ Using existing MongoDB connection");
+    return;
+  }
+
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      bufferCommands: false, // prevent long buffering
+      bufferCommands: false, // serverless: prevent buffering
     });
     isConnected = true;
     console.log("✅ MongoDB connected");
@@ -37,10 +42,6 @@ export const connectDB = async () => {
     throw err;
   }
 };
-
-
-// Connect immediately
-connectDB();
 
 // Export app for Vercel serverless
 export default app;
