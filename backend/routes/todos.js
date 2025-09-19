@@ -4,14 +4,14 @@ import { connectDB } from "../index.js";
 
 const router = express.Router();
 
-// Get all todos
+// GET all todos
 router.get("/", async (req, res) => {
   await connectDB();
   const todos = await Todo.find();
   res.json(todos);
 });
 
-// Add new todo
+// POST new todo
 router.post("/", async (req, res) => {
   await connectDB();
   const newTodo = new Todo({ text: req.body.text });
@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
   res.json(newTodo);
 });
 
-// Update todo
+// PUT update todo
 router.put("/:id", async (req, res) => {
   await connectDB();
   const updated = await Todo.findByIdAndUpdate(
@@ -30,7 +30,7 @@ router.put("/:id", async (req, res) => {
   res.json(updated);
 });
 
-// Delete todo
+// DELETE todo
 router.delete("/:id", async (req, res) => {
   await connectDB();
   await Todo.findByIdAndDelete(req.params.id);
