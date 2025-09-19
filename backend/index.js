@@ -5,13 +5,12 @@ import dotenv from "dotenv";
 import todoRoutes from "./routes/todos.js";
 
 dotenv.config();
-
 const app = express();
 
-// ✅ Allow only specific frontend domains
+// ✅ Allow specific domains (your frontend)
 app.use(cors({
   origin: [
-    "http://localhost:5173", 
+    "http://localhost:5173",
     "https://todoapps-frontend.onrender.com"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -23,7 +22,7 @@ app.use(express.json());
 // Routes
 app.use("/api/todos", todoRoutes);
 
-// Root test
+// Root
 app.get("/", (req, res) => {
   res.send("✅ Todo App Backend Running 🚀");
 });
@@ -45,10 +44,10 @@ export const connectDB = async () => {
 // Export app for Vercel
 export default app;
 
-// Local dev mode
+// Local dev
 if (process.env.NODE_ENV !== "production") {
   connectDB().then(() => {
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
   });
 }
