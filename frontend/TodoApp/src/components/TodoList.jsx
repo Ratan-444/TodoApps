@@ -4,13 +4,23 @@ const API_BASE = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 
 function TodoList({ todos, refresh }) {
   const toggleTodo = async (id, completed) => {
-    await axios.put(`${API_BASE}/api/todos/${id}`, { completed: !completed });
-    refresh();
+    try {
+      await axios.put(`${API_BASE}/api/todos/${id}`, {
+        completed: !completed,
+      });
+      refresh();
+    } catch (err) {
+      console.error("Error updating todo:", err.message);
+    }
   };
 
   const deleteTodo = async (id) => {
-    await axios.delete(`${API_BASE}/api/todos/${id}`);
-    refresh();
+    try {
+      await axios.delete(`${API_BASE}/api/todos/${id}`);
+      refresh();
+    } catch (err) {
+      console.error("Error deleting todo:", err.message);
+    }
   };
 
   return (
@@ -20,11 +30,11 @@ function TodoList({ todos, refresh }) {
           <span
             style={{
               textDecoration: todo.completed ? "line-through" : "none",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
             onClick={() => toggleTodo(todo._id, todo.completed)}
           >
-            {todo.text}
+            {todo.title}
           </span>
           <button
             onClick={() => deleteTodo(todo._id)}
