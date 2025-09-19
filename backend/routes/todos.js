@@ -1,5 +1,6 @@
 import express from "express";
 import Todo from "../models/Todo.js";
+import { connectDB } from "../index.js";
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.post("/", async (req, res) => {
 // Get Todos
 router.get("/", async (req, res) => {
   try {
+        await connectDB();
     const todos = await Todo.find();
     res.json(todos);
   } catch (err) {
