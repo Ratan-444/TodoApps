@@ -16,9 +16,15 @@ router.post("/", async (req, res) => {
 
 // Get Todos
 router.get("/", async (req, res) => {
-  const todos = await Todo.find();
-  res.json(todos);
+  try {
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 // Update Todo
 router.put("/:id", async (req, res) => {
