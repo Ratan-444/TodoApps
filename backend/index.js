@@ -8,11 +8,11 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allow frontend Render domain
+// ✅ Allow only specific frontend domains
 app.use(cors({
   origin: [
-    "http://localhost:5173",  // local frontend
-    "https://todoapps-frontend.onrender.com" // deployed frontend
+    "http://localhost:5173", 
+    "https://todoapps-frontend.onrender.com"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"]
@@ -23,19 +23,17 @@ app.use(express.json());
 // Routes
 app.use("/api/todos", todoRoutes);
 
-// Root
+// Root test
 app.get("/", (req, res) => {
   res.send("✅ Todo App Backend Running 🚀");
 });
 
-// MongoDB connection
+// MongoDB Connection
 let isConnected = false;
 export const connectDB = async () => {
   if (isConnected) return;
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      bufferCommands: false
-    });
+    await mongoose.connect(process.env.MONGO_URI, { bufferCommands: false });
     isConnected = true;
     console.log("✅ MongoDB connected");
   } catch (err) {
