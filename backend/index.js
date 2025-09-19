@@ -10,19 +10,27 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local dev
+      "https://todoapps-front.onrender.com", // your Render frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 app.use(express.json());
 
 // Routes
 app.use("/api/todos", todoRoutes);
 
-// Root
+// Root route
 app.get("/", (req, res) => {
   res.send("Todo App Backend Running 🚀");
 });
 
-// MongoDB connection (serverless-safe)
+// MongoDB connection (serverless safe)
 let isConnected = false;
 
 export const connectDB = async () => {
@@ -30,12 +38,13 @@ export const connectDB = async () => {
 
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      bufferCommands: false
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
     isConnected = true;
     console.log("✅ MongoDB connected");
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
+    console.error("❌ MongoDB connection error:", err.message);
     throw err;
   }
 };
@@ -43,10 +52,12 @@ export const connectDB = async () => {
 // Export app for Vercel serverless
 export default app;
 
-// Optional: For local development
+// Local dev
 if (process.env.NODE_ENV !== "production") {
   connectDB().then(() => {
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () =>
+      console.log(`🚀 Server running locally on port ${PORT}`)
+    );
   });
 }
