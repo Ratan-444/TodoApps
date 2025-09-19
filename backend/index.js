@@ -8,7 +8,6 @@ import todoRoutes from "./routes/todos.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -24,7 +23,8 @@ app.get("/", (req, res) => {
 // MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-  })
+  .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error(err));
+
+// 👉 Export the app instead of listening
+export default app;
