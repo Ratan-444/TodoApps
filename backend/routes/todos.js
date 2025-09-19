@@ -1,10 +1,10 @@
 import express from "express";
 import Todo from "../models/Todo.js";
-import { connectDB } from "../index.js";
+import { connectDB } from "../db.js";
 
 const router = express.Router();
 
-// Middleware to ensure DB connection
+// Middleware: ensure DB connection before handling request
 router.use(async (req, res, next) => {
   try {
     await connectDB();
@@ -14,7 +14,17 @@ router.use(async (req, res, next) => {
   }
 });
 
-// Create Todo
+// GET all todos
+router.get("/", async (req, res) => {
+  try {
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST todo
 router.post("/", async (req, res) => {
   try {
     const todo = new Todo(req.body);
@@ -25,17 +35,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get Todos
-router.get("/", async (req, res) => {
-  try {
-    const todos = await Todo.find();
-    res.json(todos);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Update Todo
+// PUT todo
 router.put("/:id", async (req, res) => {
   try {
     const updated = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -45,7 +45,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Delete Todo
+// DELETE todo
 router.delete("/:id", async (req, res) => {
   try {
     await Todo.findByIdAndDelete(req.params.id);
