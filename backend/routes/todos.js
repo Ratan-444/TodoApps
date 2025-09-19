@@ -4,13 +4,12 @@ import { connectDB } from "../index.js";
 
 const router = express.Router();
 
-// ✅ Middleware: ensure DB connection for every request
+// Middleware to ensure DB connection
 router.use(async (req, res, next) => {
   try {
     await connectDB();
     next();
   } catch (err) {
-    console.error("DB Connection Error:", err);
     return res.status(500).json({ error: "Database connection failed" });
   }
 });
@@ -22,7 +21,6 @@ router.post("/", async (req, res) => {
     await todo.save();
     res.json(todo);
   } catch (err) {
-    console.error("Create Todo Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -33,7 +31,6 @@ router.get("/", async (req, res) => {
     const todos = await Todo.find();
     res.json(todos);
   } catch (err) {
-    console.error("Get Todos Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -44,7 +41,6 @@ router.put("/:id", async (req, res) => {
     const updated = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(updated);
   } catch (err) {
-    console.error("Update Todo Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -55,7 +51,6 @@ router.delete("/:id", async (req, res) => {
     await Todo.findByIdAndDelete(req.params.id);
     res.json({ message: "Todo deleted" });
   } catch (err) {
-    console.error("Delete Todo Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
