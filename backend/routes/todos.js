@@ -1,40 +1,47 @@
 import express from "express";
 import Todo from "../models/Todo.js";
-import { connectDB } from "../index.js";
 
 const router = express.Router();
 
-// GET all todos
-router.get("/", async (req, res) => {
-  await connectDB();
-  const todos = await Todo.find();
-  res.json(todos);
-});
-
-// POST new todo
+// Create Todo
 router.post("/", async (req, res) => {
-  await connectDB();
-  const newTodo = new Todo({ text: req.body.text });
-  await newTodo.save();
-  res.json(newTodo);
+  try {
+    const todo = new Todo(req.body);
+    await todo.save();
+    res.json(todo);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// PUT update todo
+// Get Todos
+router.get("/", async (req, res) => {
+  try {
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Update Todo
 router.put("/:id", async (req, res) => {
-  await connectDB();
-  const updated = await Todo.findByIdAndUpdate(
-    req.params.id,
-    { $set: req.body },
-    { new: true }
-  );
-  res.json(updated);
+  try {
+    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(todo);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// DELETE todo
+// Delete Todo
 router.delete("/:id", async (req, res) => {
-  await connectDB();
-  await Todo.findByIdAndDelete(req.params.id);
-  res.json({ message: "Todo deleted" });
+  try {
+    await Todo.findByIdAndDelete(req.params.id);
+    res.json({ message: "Todo deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 export default router;
