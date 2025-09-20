@@ -7,24 +7,28 @@ import todoRoutes from "./routes/todoRoutes.js";
 dotenv.config();
 const app = express();
 
-// ✅ Allow your frontend origin explicitly
+// ✅ Allow frontend domain (Render frontend)
 app.use(cors({
-  origin: ["https://todoapps-fronte-gmia.onrender.com"], 
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  origin: "https://todoapps-fronte-gmia.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
+
+// ✅ Handle preflight requests
+app.options("*", cors());
 
 app.use(express.json());
 
-// ✅ Important: API route
+// API Routes
 app.use("/api/todos", todoRoutes);
 
-// Root
+// Root Route
 app.get("/", (req, res) => {
   res.send("✅ Todo App Backend Running on Vercel 🚀");
 });
 
-// ✅ MongoDB connection
+// MongoDB connection
 if (!global.mongoose) {
   global.mongoose = mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
