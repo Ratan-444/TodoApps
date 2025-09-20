@@ -4,7 +4,7 @@ import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm";
 
 // Replace with your Vercel backend URL after deployment
-const API_URL = "https://your-vercel-backend.vercel.app/api/todos";
+const API_URL = "https://todod-chi.vercel.app/api/todos";
 
 function App() {
   const [todos, setTodos] = useState([]);
