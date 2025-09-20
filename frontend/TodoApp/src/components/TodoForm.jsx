@@ -6,7 +6,7 @@ function TodoForm({ addTodo }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    addTodo(text);
+    addTodo(text); // sends as 'title'
     setText("");
   };
 
