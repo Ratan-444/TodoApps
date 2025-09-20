@@ -1,30 +1,25 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
-const API_BASE = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
-
-function TodoForm({ refresh }) {
+function TodoForm({ addTodo }) {
   const [text, setText] = useState("");
 
-  const addTodo = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    await axios.post(`${API_BASE}/api/todos`, { text });
+    addTodo(text);
     setText("");
-    refresh();
   };
 
   return (
-    <form onSubmit={addTodo} style={{ marginBottom: "20px" }}>
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add new todo"
-        style={{ padding: "8px", width: "70%" }}
+    <form onSubmit={handleSubmit} style={{ margin: "20px" }}>
+      <input 
+        type="text" 
+        value={text} 
+        onChange={(e) => setText(e.target.value)} 
+        placeholder="Enter todo..." 
+        style={{ padding: "10px", width: "250px" }}
       />
-      <button type="submit" style={{ padding: "8px 12px", marginLeft: "8px" }}>
-        Add
-      </button>
+      <button type="submit" style={{ padding: "10px 20px", marginLeft: "10px" }}>Add</button>
     </form>
   );
 }
