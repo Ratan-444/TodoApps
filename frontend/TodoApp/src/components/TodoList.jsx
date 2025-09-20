@@ -13,7 +13,7 @@ function TodoList({ todos, toggleTodo, deleteTodo }) {
               marginRight: "15px" 
             }}
           >
-            {todo.text}
+            {todo.title}
           </span>
           <button onClick={() => deleteTodo(todo._id)} style={{ color: "red" }}>❌</button>
         </li>
