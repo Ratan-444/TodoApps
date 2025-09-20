@@ -9,7 +9,7 @@ const app = express();
 
 // ✅ Allow your frontend origin explicitly
 app.use(cors({
-  origin: ["https://todoapps-fronte.onrender.com"], 
+  origin: ["https://todoapps-fronte-gmia.onrender.com"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
