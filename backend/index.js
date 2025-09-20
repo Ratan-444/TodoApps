@@ -2,52 +2,22 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import todoRoutes from "./routes/todos.js";
+import todoRoutes from "./routes/todoRoutes.js";
 
 dotenv.config();
 const app = express();
 
-// ✅ Allow specific domains (your frontend)
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://todoapps-frontend.onrender.com"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type"]
-}));
-
+app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use("/api/todos", todoRoutes);
 
-// Root
-app.get("/", (req, res) => {
-  res.send("✅ Todo App Backend Running 🚀");
-});
-
-// MongoDB Connection
-let isConnected = false;
-export const connectDB = async () => {
-  if (isConnected) return;
-  try {
-    await mongoose.connect(process.env.MONGO_URI, { bufferCommands: false });
-    isConnected = true;
-    console.log("✅ MongoDB connected");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
-    throw err;
-  }
-};
-
-// Export app for Vercel
-export default app;
-
-// Local dev
-if (process.env.NODE_ENV !== "production") {
-  connectDB().then(() => {
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+// MongoDB connection (Vercel keeps connections open across requests if cached)
+if (!global.mongoose) {
+  global.mongoose = mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   });
 }
+
+export default app;
