@@ -3,18 +3,20 @@ import axios from "axios";
 import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm";
 
-// Replace with your Vercel backend URL after deployment
+// Replace with your deployed Vercel backend URL
 const API_URL = "https://todod-chi.vercel.app/api/todos";
 
 function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    axios.get(API_URL).then(res => setTodos(res.data));
+    axios.get(API_URL)
+      .then(res => setTodos(res.data))
+      .catch(err => console.error(err));
   }, []);
 
-  const addTodo = async (text) => {
-    const res = await axios.post(API_URL, { text });
+  const addTodo = async (title) => {
+    const res = await axios.post(API_URL, { title });
     setTodos([...todos, res.data]);
   };
 
