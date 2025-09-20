@@ -1,8 +1,7 @@
-// models/Todo.js
 import mongoose from "mongoose";
 
 const todoSchema = new mongoose.Schema({
-    text: { type: String, required: true },
+  title: { type: String, required: true },  // required field
   completed: { type: Boolean, default: false }
 }, { timestamps: true });
 
